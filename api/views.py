@@ -18,3 +18,11 @@ class UserViewSet(viewsets.ModelViewSet):
 class CapteurDataViewSet(viewsets.ModelViewSet):
     queryset = CapteurData.objects.all()
     serializer_class = CapteurDataSerializer
+
+
+
+
+from django.shortcuts import render
+
+def home_view(request):
+    return render(request, 'loging.html')
