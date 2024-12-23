@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .serializers import AlertSerializer, UserSerializer, CapteurDataSerializer,CapteurSerializer
 from django.contrib.auth.decorators import login_required
+from .models import User  # Importez le modèle User
 
 # Récupérer le modèle utilisateur personnalisé
 User = get_user_model()
@@ -89,3 +90,21 @@ def profile_view(request):
         messages.success(request, "Profile updated successfully!")
 
     return render(request, 'profile.html', {"user": user, "countries": countries})
+
+def alert_view(request):
+    # Récupérer toutes les alertes
+    alerts = Alert.objects.all()
+    return render(request, 'index.html', {'alerts': alerts})
+
+def alert_list_view(request):
+    # Récupérer toutes les alertes de la base de données
+    alerts = Alert.objects.all()
+    # Passer les alertes au template
+    return render(request, 'alert.html', {'alerts': alerts})
+
+
+
+def user_list_view(request):
+    # Récupérer tous les utilisateurs
+    users = User.objects.all()
+    return render(request, 'users.html', {'users': users})

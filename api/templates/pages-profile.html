@@ -13,18 +13,7 @@
                         <h4 class="card-title mt-2">{{ user.first_name }} {{ user.last_name }}</h4>
                         <h6 class="card-subtitle">{{ user.get_role_display }}</h6>
                         <div class="row text-center justify-content-center">
-                            <div class="col-4">
-                                <a href="javascript:void(0)" class="link">
-                                    <i class="icon-people" aria-hidden="true"></i>
-                                    <span class="value-digit">254</span> <!-- Exemple : ajouter vos stats ici -->
-                                </a>
-                            </div>
-                            <div class="col-4">
-                                <a href="javascript:void(0)" class="link">
-                                    <i class="icon-picture" aria-hidden="true"></i>
-                                    <span class="value-digit">54</span> <!-- Exemple : ajouter vos stats ici -->
-                                </a>
-                            </div>
+
                         </div>
                     </center>
                 </div>
@@ -62,21 +51,6 @@
                                     <option value="{{ key }}" {% if user.role == key %}selected{% endif %}>{{ value }}</option>
                                     {% endfor %}
                                 </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-12">Country</label>
-                            <div class="col-sm-12 border-bottom">
-                                <select class="form-select shadow-none ps-0 border-0 form-control-line">
-                                    {% for country in countries %}
-                                    <option {% if user.country == country %}selected{% endif %}>{{ country }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12 d-flex">
-                                <button type="submit" class="btn btn-success mx-auto mx-md-0 text-white">Update Profile</button>
                             </div>
                         </div>
                     </form>

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Liste des alertes</h4>
+                    <div class="table-responsive">
+                        <table class="table alert-table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Titre</th>
+                                <th>Description</th>
+                                <th>Utilisateurs</th>
+                                <th>Capteur</th>
+                                <th>Date et Heure</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for alert in alerts %}
+                            <tr>
+                                <td>{{ alert.pk }}</td>
+                                <td>{{ alert.title }}</td>
+                                <td>{{ alert.description }}</td>
+                                <td>
+                                    {% for user in alert.user.all %}
+                                    {{ user.username }}<br>
+                                    {% endfor %}
+                                </td>
+                                <td>{{ alert.capteur }}</td>
+                                <td>{{ alert.timestamp }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,5 +1,6 @@
-{% load static %}
+
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,11 +24,8 @@
             <nav class="navbar top-navbar navbar-expand-md navbar-dark">
                 <div class="navbar-header" data-logobg="skin6">
                     <a class="navbar-brand ms-4" href="/">
-                        <b class="logo-icon">
-                            <img src="{% static 'images/logo-light-icon.png' %}" alt="homepage" class="dark-logo" />
-                        </b>
                         <span class="logo-text">
-                            <img src="{% static 'images/logo-light-text.png' %}" alt="homepage" class="dark-logo" />
+                            <img src="{% static 'images/filelogo.png' %}" alt="homepage" class="dark-logo" />
                         </span>
                     </a>
                     <a class="nav-toggler waves-effect waves-light text-white d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
@@ -53,6 +51,11 @@
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/" aria-expanded="false"><i class="mdi me-2 mdi-gauge"></i><span class="hide-menu">Dashboard</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/profile" aria-expanded="false"><i class="mdi me-2 mdi-account-check"></i><span class="hide-menu">Profile</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/table" aria-expanded="false"><i class="mdi me-2 mdi-table"></i><span class="hide-menu">Historique Capteur</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/users" aria-expanded="false"><i class="mdi me-2 mdi-table"></i><span class="hide-menu">Liste des utilisateurs</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/alerts" aria-expanded="false"><i class="mdi me-2 mdi-table"></i><span class="hide-menu">Liste des alertes</span></a></li>
+
+
+
                     </ul>
                 </nav>
             </div>
