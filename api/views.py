@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from .models import Alert, CapteurData
-from .serializers import AlertSerializer, UserSerializer, CapteurDataSerializer
+from .models import Alert, CapteurData,Capteur
+from .serializers import AlertSerializer, UserSerializer, CapteurDataSerializer,CapteurSerializer
 
 # Récupérer le modèle utilisateur personnalisé
 User = get_user_model()
@@ -18,3 +18,10 @@ class UserViewSet(viewsets.ModelViewSet):
 class CapteurDataViewSet(viewsets.ModelViewSet):
     queryset = CapteurData.objects.all()
     serializer_class = CapteurDataSerializer
+
+
+class CapteurViewSet(viewsets.ModelViewSet):
+    queryset = Capteur.objects.all()
+    serializer_class = CapteurSerializer
+
+
