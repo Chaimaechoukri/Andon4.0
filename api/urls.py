@@ -7,6 +7,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
+
 # Création d'un routeur pour gérer automatiquement les routes des API
 router = DefaultRouter()
 router.register(r'alerts', AlertViewSet)  # Endpoint pour les alertes
@@ -20,8 +21,10 @@ urlpatterns = [
                   path('login/', views.LoginView.as_view(), name='login'),  # Page de connexion
                   path('profile/', TemplateView.as_view(template_name='pages-profile.html'), name='profile'),  # Profil de l'utilisateur
                   path('table/', views.TableView.as_view(), name='table'),  # Page de tableau
-                  path('alerts/', alert_list_view, name='alerts'),  # URL pour la liste des alertes                  # path('users/', views.alert_view, name='users'),  # Associe l'URL "/users/" à la vue alert_view
+                  path('alerts/', alert_list_view, name='alerts'),  # URL pour la liste des alertes
+                  path('api/visitor-data/', views.get_visitor_data, name='get_visitor_data'),
                   path('users/', views.user_list_view, name='users'),  # Route vers la vue de la liste des utilisateurs
+                  path('api/capteur-data/', views.get_capteur_data, name='get_capteur_data'),
                   # Routes de l'API
                   path('api/', include(router.urls)),  # Routes pour l'API
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

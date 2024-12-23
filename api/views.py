@@ -9,6 +9,9 @@ from django.contrib import messages
 from .serializers import AlertSerializer, UserSerializer, CapteurDataSerializer,CapteurSerializer
 from django.contrib.auth.decorators import login_required
 from .models import User  # Importez le modèle User
+from django.db.models import Count, Q
+from django.http import JsonResponse
+from .models import Capteur, CapteurData
 
 # Récupérer le modèle utilisateur personnalisé
 User = get_user_model()
@@ -108,3 +111,43 @@ def user_list_view(request):
     # Récupérer tous les utilisateurs
     users = User.objects.all()
     return render(request, 'users.html', {'users': users})
+
+
+
+def get_capteur_data(request):
+    # Récupération des données des capteurs
+    capteurs = Capteur.objects.all()
+    data = []
+    for capteur in capteurs:
+        latest_data = capteur.datas.order_by('-timestamp').first()  # Dernière valeur enregistrée
+        data.append({
+            'ref': capteur.ref,
+            'type': capteur.type,
+            'value': latest_data.value if latest_data else None,  # Valeur si existante
+        })
+    return JsonResponse(data, safe=False)
+
+
+from .models import Capteur, CapteurData
+
+def get_visitor_data(request):
+    capteurs = Capteur.objects.all()
+    data = []
+
+    for capteur in capteurs:
+        total_entries = capteur.datas.count()  # Nombre total d'enregistrements
+        enpanne_count = capteur.datas.filter(state="enpanne").count()  # Nombre d'enregistrements en état "enpanne"
+
+        if total_entries > 0:
+            enpanne_percentage = (enpanne_count / total_entries) * 100
+        else:
+            enpanne_percentage = 0  # Si aucun enregistrement, le pourcentage est 0
+
+        data.append({
+            "ref": capteur.ref,
+            "percentage": enpanne_percentage
+        })
+
+    return JsonResponse(data, safe=False)
+
+

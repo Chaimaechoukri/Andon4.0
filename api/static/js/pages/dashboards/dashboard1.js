@@ -7,106 +7,99 @@ File: js
 $(function () {
     "use strict";
 
-    // ============================================================== 
-    // Sales overview
-    // ============================================================== 
-    var chart2 = new Chartist.Bar('.amp-pxl', {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        series: [
-            [9, 5, 3, 7, 5, 10, 3],
-            [6, 3, 9, 5, 4, 6, 4]
-        ]
-    }, {
-        axisX: {
-            // On the x-axis start means top and end means bottom
-            position: 'end',
-            showGrid: false
-        },
-        axisY: {
-            // On the y-axis start means left and end means right
-            position: 'start'
-        },
-        high: '12',
-        low: '0',
-        plugins: [
-            Chartist.plugins.tooltip()
-        ]
-    });
-
-    var chart = [chart2];
-
-    // ============================================================== 
-    // This is for the animation
     // ==============================================================
-
-    for (var i = 0; i < chart.length; i++) {
-        chart[i].on('draw', function (data) {
-            if (data.type === 'line' || data.type === 'area') {
-                data.element.animate({
-                    d: {
-                        begin: 500 * data.index,
-                        dur: 500,
-                        from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-                        to: data.path.clone().stringify(),
-                        easing: Chartist.Svg.Easing.easeInOutElastic
-                    }
-                });
+    // Sales overview
+    // ==============================================================
+    fetch('/api/capteur-data/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP! Statut: ${response.status}`);
             }
-            if (data.type === 'bar') {
-                data.element.animate({
-                    y2: {
-                        dur: 500,
-                        from: data.y1,
-                        to: data.y2,
-                        easing: Chartist.Svg.Easing.easeInOutElastic
+            return response.json();
+        })
+        .then(data => {
+            // Vérifier si les données sont valides
+            if (!Array.isArray(data) || data.length === 0) {
+                console.error('Aucune donnée disponible pour les capteurs.');
+                return;
+            }
+
+            // Extraire les labels (refs) et les valeurs des capteurs
+            const labels = data.map(item => item.ref);
+            const values = data.map(item => item.value || 0); // Si pas de valeur, utiliser 0
+
+            // Mettre à jour le graphique Chartist avec l'option barWidth
+            new Chartist.Bar('.amp-pxl', {
+                labels: labels,
+                series: [values]
+            }, {
+                axisX: {
+                    position: 'end',
+                    showGrid: false
+                },
+                axisY: {
+                    position: 'start'
+                },
+                high: Math.max(...values) + 10, // Ajuste la hauteur dynamique
+                low: 0,
+                barWidth: 100, // Changer la largeur des barres (ajuster la valeur ici)
+                plugins: [
+                    Chartist.plugins.tooltip()
+                ]
+            });
+        })
+        .catch(error => console.error('Erreur lors de la récupération des données :', error));
+
+    // ==============================================================
+    // Visitor overview
+    // ==============================================================
+    fetch('/api/visitor-data/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Vérifier si les données sont valides
+            if (!Array.isArray(data) || data.length === 0) {
+                console.error('Aucune donnée disponible pour les visiteurs.');
+                return;
+            }
+
+            // Préparer les données pour le graphique C3
+            const columns = data.map(item => [item.ref, item.percentage]);
+
+            // Mettre à jour le graphique C3 Donut
+            var chart = c3.generate({
+                bindto: '#visitor',
+                data: {
+                    columns: columns,
+                    type: 'donut',
+                    onclick: function (d, i) {
+                        console.log("Capteur cliqué :", d.id, d.value);
                     },
-                    opacity: {
-                        dur: 500,
-                        from: 0,
-                        to: 1,
-                        easing: Chartist.Svg.Easing.easeInOutElastic
+                    onmouseover: function (d, i) {
+                        console.log("Survol :", d.id, d.value);
+                    },
+                    onmouseout: function (d, i) {
+                        console.log("Fin du survol :", d.id, d.value);
                     }
-                });
-            }
-        });
-    }
-
-    // ============================================================== 
-    // Our visitor
-    // ============================================================== 
-
-    var chart = c3.generate({
-        bindto: '#visitor',
-        data: {
-            columns: [
-                ['Other', 30],
-                ['Desktop', 10],
-                ['Tablet', 40],
-                ['Mobile', 50],
-            ],
-
-            type: 'donut',
-            onclick: function (d, i) { console.log("onclick", d, i); },
-            onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-            onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-        },
-        donut: {
-            label: {
-                show: false
-            },
-            title: "Our visitor",
-            width: 20,
-
-        },
-
-        legend: {
-            hide: true
-            //or hide: 'data1'
-            //or hide: ['data1', 'data2']
-        },
-        color: {
-            pattern: ['#eceff1', '#745af2', '#26c6da', '#1e88e5']
-        }
-    });
-
+                },
+                donut: {
+                    label: {
+                        show: true // Afficher les pourcentages dans le donut
+                    },
+                    title: "État En Panne (%)",
+                    width: 30
+                },
+                legend: {
+                    position: 'right' // Afficher la légende sur le côté droit
+                },
+                color: {
+                    pattern: ['#ff4f4f', '#ffaf00', '#00c292', '#03a9f3'] // Couleurs personnalisées
+                }
+            });
+        })
+        .catch(error => console.error('Erreur lors de la récupération des données :', error));
 });
