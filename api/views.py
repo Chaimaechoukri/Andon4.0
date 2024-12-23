@@ -7,6 +7,7 @@ from django.views import View
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .serializers import AlertSerializer, UserSerializer, CapteurDataSerializer,CapteurSerializer
+from django.contrib.auth.decorators import login_required
 
 # Récupérer le modèle utilisateur personnalisé
 User = get_user_model()
@@ -72,3 +73,19 @@ class TableView(View):
         print(context)
         return render(request, self.template_name,context)
 
+@login_required
+def profile_view(request):
+    user = request.user
+    countries = ["London", "India", "USA", "Canada", "Thailand"]
+
+    if request.method == "POST":
+        user.first_name = request.POST.get("full_name").split(" ")[0]
+        user.last_name = " ".join(request.POST.get("full_name").split(" ")[1:])
+        user.email = request.POST.get("email")
+        user.phone_number = request.POST.get("phone_number")
+        user.role = request.POST.get("role")
+        user.save()
+        # Message de confirmation si besoin
+        messages.success(request, "Profile updated successfully!")
+
+    return render(request, 'profile.html', {"user": user, "countries": countries})
