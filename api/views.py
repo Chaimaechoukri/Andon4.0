@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from .models import User  # Importez le modèle User
 from django.db.models import Count, Q
 from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Capteur, CapteurData
 
 # Récupérer le modèle utilisateur personnalisé
@@ -27,6 +29,29 @@ class UserViewSet(viewsets.ModelViewSet):
 class CapteurDataViewSet(viewsets.ModelViewSet):
     queryset = CapteurData.objects.all()
     serializer_class = CapteurDataSerializer
+
+    def create(self, request, *args, **kwargs):
+        # Access POST request data
+        post_data = request.data
+        print("POST Data:", post_data)  # Print POST data for debugging
+        print("Headers:", request.headers)  # Print headers if needed
+        print("User:", request.user)  # Print authenticated user (if applicable)
+
+        # Optional: Return the POST data in the response for demonstration purposes
+        # Note: This is not recommended for production
+        response_data = {
+            "message": "Received POST data",
+            "post_data": post_data,
+        }
+
+        # Default behavior to save data
+        serializer = self.get_serializer(data=post_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        # Return the response
+        return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 

@@ -11,44 +11,47 @@ $(function () {
     // Sales overview
     // ==============================================================
     fetch('/api/capteur-data/')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP! Statut: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Vérifier si les données sont valides
-            if (!Array.isArray(data) || data.length === 0) {
-                console.error('Aucune donnée disponible pour les capteurs.');
-                return;
-            }
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Vérifier si les données sont valides
+        if (!Array.isArray(data) || data.length === 0) {
+            console.error('Aucune donnée disponible pour les capteurs.');
+            return;
+        }
 
-            // Extraire les labels (refs) et les valeurs des capteurs
-            const labels = data.map(item => item.ref);
-            const values = data.map(item => item.value || 0); // Si pas de valeur, utiliser 0
+        // Extraire les 8 derniers capteurs
+        const recentData = data.slice(-8); // Prend les 5 derniers éléments du tableau
 
-            // Mettre à jour le graphique Chartist avec l'option barWidth
-            new Chartist.Bar('.amp-pxl', {
-                labels: labels,
-                series: [values]
-            }, {
-                axisX: {
-                    position: 'end',
-                    showGrid: false
-                },
-                axisY: {
-                    position: 'start'
-                },
-                high: Math.max(...values) + 10, // Ajuste la hauteur dynamique
-                low: 0,
-                barWidth: 100, // Changer la largeur des barres (ajuster la valeur ici)
-                plugins: [
-                    Chartist.plugins.tooltip()
-                ]
-            });
-        })
-        .catch(error => console.error('Erreur lors de la récupération des données :', error));
+        // Extraire les labels (refs) et les valeurs des capteurs
+        const labels = recentData.map(item => item.info_capteur);
+        const values = recentData.map(item => item.value || 0); // Si pas de valeur, utiliser 0
+
+        // Mettre à jour le graphique Chartist avec l'option barWidth
+        new Chartist.Bar('.amp-pxl', {
+            labels: labels,
+            series: [values]
+        }, {
+            axisX: {
+                position: 'end',
+                showGrid: false
+            },
+            axisY: {
+                position: 'start'
+            },
+            high: Math.max(...values) + 10, // Ajuste la hauteur dynamique
+            low: 0,
+            barWidth: 100, // Changer la largeur des barres (ajuster la valeur ici)
+            plugins: [
+                Chartist.plugins.tooltip()
+            ]
+        });
+    })
+    .catch(error => console.error('Erreur lors de la récupération des données :', error));
 
     // ==============================================================
     // Visitor overview

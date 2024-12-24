@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from django.contrib.auth.views import LogoutView
 from . import views  # Assurez-vous que l'importation de views est correcte
 from .views import AlertViewSet, LoginView, UserViewSet, CapteurDataViewSet, CapteurViewSet
 from .views import alert_list_view  # Assure-toi que la vue est bien importée
@@ -24,7 +25,8 @@ urlpatterns = [
                   path('alerts/', alert_list_view, name='alerts'),  # URL pour la liste des alertes
                   path('api/visitor-data/', views.get_visitor_data, name='get_visitor_data'),
                   path('users/', views.user_list_view, name='users'),  # Route vers la vue de la liste des utilisateurs
-                  path('api/capteur-data/', views.get_capteur_data, name='get_capteur_data'),
                   # Routes de l'API
                   path('api/', include(router.urls)),  # Routes pour l'API
+                  path('login/',LogoutView.as_view(next_page='/login/'), name='logout'),
+
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

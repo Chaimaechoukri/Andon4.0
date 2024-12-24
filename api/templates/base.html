@@ -9,7 +9,7 @@
     <meta name="keywords" content="dashboard, bootstrap 5, responsive">
     <meta name="robots" content="noindex,nofollow">
     <title>{{title}}</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/filelogo.png' %}">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{% static 'plugins/chartist-js/dist/chartist.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/chartist-js/dist/chartist-init.css' %}">
@@ -31,17 +31,20 @@
                     <a class="nav-toggler waves-effect waves-light text-white d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
                 </div>
                 <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="{% static 'images/users/1.jpg' %}" alt="user" class="profile-pic me-2">{{request.user}}
+                                <img src="{% static 'images/users/admin image.png' %}" alt="user" class="profile-pic me-2">{{ request.user }}
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown"></ul>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Déconnexion</a></li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
             </nav>
         </header>
+        
         <!-- End Topbar header -->
         <!-- Sidebar -->
         <aside class="left-sidebar" data-sidebarbg="skin6">
